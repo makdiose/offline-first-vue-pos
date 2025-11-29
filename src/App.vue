@@ -1,19 +1,20 @@
+<!-- File: src/App.vue -->
+<script setup lang="ts">
+import { computed } from 'vue';
+import { RouterView, useRoute } from 'vue-router';
+import { layouts } from '@/layouts';
+
+const route = useRoute();
+
+const currentLayout = computed(() => {
+  const name = route.meta.layout as keyof typeof layouts;
+  return layouts[name] || layouts.Main;
+});
+</script>
+
 <template>
-  <POSLayout>
-    <div class="p-4">
-      <h1 class="text-xl font-bold">Vue POS</h1>
-      <p class="mt-2 text-gray-600">Your POS app is now running with Tailwind.</p>
-    </div>
-  </POSLayout>
+  <component :is="currentLayout">
+    <RouterView />
+  </component>
 </template>
 
-<script>
-import POSLayout from "./components/POSLayout.vue"
-
-export default {
-  name: "App",
-  components: {
-    POSLayout
-  }
-}
-</script>
