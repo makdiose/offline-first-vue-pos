@@ -1,31 +1,38 @@
 <!-- File: src/components/layout/FooterBar.vue -->
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { useThemeStore } from '@/stores/theme'
 
-const currentTime = ref(new Date())
-const appVersion = '1.0.0'
+const theme = useThemeStore()
 
-const currentDate = computed(() =>
-  currentTime.value.toLocaleDateString('en-US', {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-)
-
-setInterval(() => {
-  currentTime.value = new Date()
-}, 1000)
+//Fetch VITE_APP_NAME in the env file
+const appName = import.meta.env.VITE_APP_NAME || 'VUE POS';
 </script>
 
 <template>
-  <footer class="h-10 bg-gray-800 text-white text-xs flex items-center justify-between px-6 shadow-inner">
-    <p>CRM Nexus v{{ appVersion }} &copy; {{ new Date().getFullYear() }}</p>
-
-    <p>
-      <span class="font-mono">{{ currentDate }}</span> | 
-      <span class="font-mono">{{ currentTime.toLocaleTimeString() }}</span>
+  <footer
+    class="h-12 flex items-center justify-between 
+           bg-white dark:bg-gray-800 
+           text-xs text-gray-600 dark:text-gray-300 
+           px-6 border-t border-gray-200 dark:border-gray-700
+           transition-colors"
+  >
+    <!-- Branding -->
+    <p class="tracking-wide">
+      &copy; {{ new Date().getFullYear() }} {{ appName }}. All rights reserved.
     </p>
+
+    <!-- Theme Toggle -->
+    <button
+      @click="theme.toggleTheme()"
+      class="px-3 py-1 text-xs rounded-lg border 
+            border-gray-300 dark:border-gray-600 
+            bg-gray-100 dark:bg-gray-700
+            text-gray-700 dark:text-gray-200
+            hover:bg-gray-200 dark:hover:bg-gray-600
+            transition-all"
+    >
+      {{ theme.theme === 'dark' ? 'Light Mode' : 'Dark Mode' }}
+    </button>
+
   </footer>
 </template>

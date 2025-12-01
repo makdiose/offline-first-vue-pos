@@ -18,27 +18,36 @@ const appName = import.meta.env.VITE_APP_NAME || 'VUE POS';
 
 
 </script>
-
 <template>
   <!-- SIDEBAR -->
-  <nav class="hidden sm:flex flex-col w-64 bg-gray-800 text-white shadow-xl fixed inset-y-0 z-20">
-    <div class="flex items-center justify-center h-16 bg-indigo-600 text-xl font-bold">
-    {{ appName }}
+  <nav
+    class="hidden sm:flex flex-col w-64 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100
+           shadow-lg fixed inset-y-0 z-20 transition-all"
+  >
+    <!-- App Name -->
+    <div
+      class="flex items-center justify-center h-16 bg text-xl font-bold shadow"
+    >
+      {{ appName }}
     </div>
 
+    <!-- Navigation -->
     <div class="flex flex-col flex-grow p-4 space-y-2 overflow-y-auto">
-      <RouterLink 
-        v-for="item in navItems" 
-        :key="item.name" 
-        :to="item.path" 
-        active-class="bg-indigo-700 text-white shadow-md"
-        class="flex items-center px-4 py-2 rounded-lg transition duration-150 ease-in-out hover:bg-gray-700 hover:text-white"
+
+      <RouterLink
+        v-for="item in navItems"
+        :key="item.name"
+        :to="item.path"
+        active-class="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+        class="flex items-center px-4 py-2 rounded-lg transition
+               hover:bg-gray-200 dark:hover:bg-gray-700"
       >
         <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
           <path :d="item.icon"></path>
         </svg>
         {{ item.name }}
       </RouterLink>
+
     </div>
   </nav>
 </template>
