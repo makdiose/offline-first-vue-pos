@@ -4,6 +4,8 @@ import { createApp } from "vue"
 import App from "./App.vue"
 import router from "./router"
 import "./assets/main.css"
+import "flowbite"
+
 
 // Import and initialize IndexedDB
 import { initDatabase } from "./db/db_migrations"

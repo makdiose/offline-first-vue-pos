@@ -1,4 +1,4 @@
-// src/db/db_migrations.js
+//File: src/db/db_migrations.js
 import { db } from "./db"
 
 // Version 1: initial MyPOS schema
