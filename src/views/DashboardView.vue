@@ -94,6 +94,7 @@
 
 
 <script> 
+console.log("Firebase project:", import.meta.env.VITE_FIREBASE_PROJECT_ID)
 
 export default {
   name: "DashboardView"

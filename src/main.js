@@ -1,4 +1,4 @@
-//File: src/main.js
+// File: src/main.js
 
 import { createApp } from "vue"
 import App from "./App.vue"
@@ -6,29 +6,35 @@ import router from "./router"
 import "./assets/main.css"
 import "flowbite"
 
-// Pinia (global store)
 import { createPinia } from "pinia"
-
-// Theme store
 import { useThemeStore } from "@/stores/theme"
 
-// IndexedDB initialization
 import { initDatabase } from "./db/db_migrations"
 
-async function bootstrap() {
-  await initDatabase() // Ensure DB is ready
+// Listen to Firebase auth state before mounting
+import { watchAuth } from "@/lib/firebase/auth"
 
-  const app = createApp(App)
+async function bootstrap() {
+  await initDatabase()
+
+  let app       // Vue instance
   const pinia = createPinia()
 
-  app.use(pinia)
-  app.use(router)
+  watchAuth(() => {
+    // Only mount ONCE when Firebase gives us initial auth state
+    if (!app) {
+      app = createApp(App)
 
-  // Now that pinia is loaded, activate saved theme
-  const theme = useThemeStore()
-  theme.setTheme(theme.theme)
+      app.use(pinia)
+      app.use(router)
 
-  app.mount("#app")
+      // Now that Pinia is active, load saved theme
+      const theme = useThemeStore()
+      theme.setTheme(theme.theme)
+
+      app.mount("#app")
+    }
+  })
 }
 
 bootstrap()

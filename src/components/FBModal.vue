@@ -33,26 +33,34 @@
         <slot />
       </div>
 
-      <!-- Footer -->
-      <div class="mt-6 flex justify-end space-x-2">
+    <!-- Footer -->
+    <div class="mt-6 flex justify-end gap-3">
+
+      <!-- Default footer if no slot is provided -->
+      <slot name="footer">
         <button
           @click="$emit('close')"
-          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 
-                 text-gray-800 dark:text-gray-200 
-                 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          class="px-4 py-2 rounded
+                bg-gray-200 hover:bg-gray-300
+                dark:bg-gray-700 dark:hover:bg-gray-600
+                text-gray-800 dark:text-gray-100"
         >
           Cancel
         </button>
 
         <button
           @click="$emit('confirm')"
-          class="px-4 py-2 bg-gray-800 text-white 
-                 dark:bg-gray-600 dark:text-gray-200 
-                 rounded hover:bg-gray-900 dark:hover:bg-gray-500 transition"
+          class="px-4 py-2 rounded
+                bg-gray-300 hover:bg-gray-400
+                dark:bg-gray-600 dark:hover:bg-gray-500
+                text-gray-800 dark:text-gray-100"
         >
-          Save
+          Confirm
         </button>
-      </div>
+      </slot>
+
+    </div>
+
     </div>
   </div>
 </template>

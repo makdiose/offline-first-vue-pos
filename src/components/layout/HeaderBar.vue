@@ -1,18 +1,33 @@
 <!-- File: src/components/layout/HeaderBar.vue -->
-<script setup lang="ts">
-import { ref } from 'vue'
+<script setup>
+import { computed, ref } from "vue"
+import { useAuthStore } from "@/stores/auth"
 
-const user = ref({ name: 'Alexander', initial: 'A' })
+const auth = useAuthStore()
+
+// Dropdown
 const isDropdownOpen = ref(false)
-
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
 }
 
+// Computed user name (from Firestore profile)
+const userName = computed(() => {
+  return auth.profile?.name || "User"
+})
+
+// Auto initial from name (e.g., Mak → M)
+const userInitial = computed(() => {
+  return userName.value.charAt(0).toUpperCase()
+})
+
 const logout = () => {
-  console.log('User logged out.')
+  auth.logout()
 }
+
+
 </script>
+
 
 <template>
   <header
@@ -21,25 +36,24 @@ const logout = () => {
   >
     <!-- Welcome User -->
     <div class="text-xl font-semibold text-gray-700 dark:text-gray-200">
-      Welcome back, {{ user.name }}
+      Welcome back, {{ userName }}
     </div>
 
     <div class="flex items-center">
 
       <!-- Profile Dropdown -->
       <div class="relative ml-4">
-      <button
-  @click="toggleDropdown"
-  class="flex items-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
->
-  <div
-    class="w-10 h-10 flex items-center justify-center rounded-full
-           bg-gray-800 dark:bg-gray-600 text-white font-bold text-sm"
-  >
-    {{ user.initial }}
-  </div>
-</button>
-
+        <button
+          @click="toggleDropdown"
+          class="flex items-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          <div
+            class="w-10 h-10 flex items-center justify-center rounded-full
+                  bg-gray-800 dark:bg-gray-600 text-white font-bold text-sm"
+          >
+            {{ userInitial }}
+          </div>
+        </button>
 
         <div
           v-if="isDropdownOpen"
@@ -79,3 +93,4 @@ const logout = () => {
 
   </header>
 </template>
+
