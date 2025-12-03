@@ -1,0 +1,30 @@
+name: Build Vue POS
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Use official Node setup
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install dependencies using clean, stable method
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the app
+      - name: Build
+        run: npm run build
