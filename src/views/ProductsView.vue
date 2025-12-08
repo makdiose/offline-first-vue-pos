@@ -2,31 +2,45 @@
 <template>
   <div class="p-6 space-y-10">
 
-    <!-- Page Title -->
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
-      Products
-    </h1>
 
     <!-- Top Bar (Add Button) -->
-    <div class="flex justify-between items-center">
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-        Product List
-      </h2>
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+        Products
+      </h1>
 
       <button
         @click="openAdd()"
-        class="text-black bg-gray-300 hover:bg-gray-500 
-               font-medium rounded-lg text-sm px-5 py-2.5
-               dark:bg-gray-600 dark:hover:bg-gray-500 
-               dark:text-gray-200"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium 
+              text-white bg-blue-600 hover:bg-blue-700 
+              rounded-lg shadow focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
       >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 4v16m8-8H4" />
+        </svg>
         Add Product
       </button>
     </div>
 
+
     <!-- Table Section -->
     <div class="card shadow-md">
       <div class="overflow-x-auto rounded-lg">
+
+        <!-- Search Bar -->
+        <div class="flex mb-4">
+          <input
+            v-model="search"
+            type="text"
+            placeholder="Search by name, description or price..."
+            class="w-full px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 
+                  bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                  focus:ring-gray-500 focus:border-gray-500"
+          >
+        </div>
+
         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
 
           <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
@@ -43,15 +57,16 @@
           <tbody>
 
             <tr
-              v-for="product in products"
+              v-for="product in filteredProducts"
               :key="product.id"
               class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 
-                     hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                     "
             >
+            
             <td class="px-6 py-4">
               <img
                 :src="product.image ? product.image : '/no-image.png'"
-                class="h-12 w-12 rounded object-cover border dark:border-gray-700"
+                class="h-20 rounded object-cover border dark:border-gray-700"
               >
             </td>
 
@@ -430,7 +445,6 @@ export default {
   data() {
     return {
       products: [],
-
       showAddModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -438,6 +452,8 @@ export default {
       selectedProduct: null,
 
       isConvertingImage: false,
+      search: "",
+
 
       form: {
         name: "",
@@ -635,7 +651,22 @@ methods: {
 
 
   
-}
+},
+computed: {
+  filteredProducts() {
+    const term = this.search.toLowerCase().trim()
+    if (!term) return this.products
+
+    return this.products.filter(p => {
+      return (
+        p.name?.toLowerCase().includes(term) ||
+        p.description?.toLowerCase().includes(term) ||
+        String(p.price).includes(term)
+      )
+    })
+  }
+},
+
 
 }
 </script>
