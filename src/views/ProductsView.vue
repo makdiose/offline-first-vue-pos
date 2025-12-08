@@ -31,6 +31,7 @@
 
           <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
             <tr>
+              <th scope="col" class="px-6 py-3">Image</th>
               <th scope="col" class="px-6 py-3">ID</th>
               <th scope="col" class="px-6 py-3">Name</th>
               <th scope="col" class="px-6 py-3">Price</th>
@@ -47,6 +48,13 @@
               class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 
                      hover:bg-gray-50 dark:hover:bg-gray-700 transition"
             >
+            <td class="px-6 py-4">
+              <img
+                :src="product.image ? product.image : '/no-image.png'"
+                class="h-12 w-12 rounded object-cover border dark:border-gray-700"
+              >
+            </td>
+
               <td class="px-6 py-4">{{ product.id }}</td>
               <td class="px-6 py-4">{{ product.name }}</td>
               <td class="px-6 py-4">{{ product.price }}</td>
@@ -151,6 +159,54 @@
                    block w-full px-3 py-2"
           ></textarea>
         </div>
+
+<!-- Product Image -->
+<div>
+  <label class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+    Product Image
+  </label>
+
+  <!-- Image Preview Box -->
+  <div class="relative w-28 h-28 rounded-lg border dark:border-gray-700 overflow-hidden">
+
+    <!-- Loading Text -->
+    <div
+      v-if="isConvertingImage"
+      class="absolute inset-0 flex items-center justify-center
+             bg-black bg-opacity-40 z-30 text-white text-xs font-medium"
+    >
+      Loading...
+    </div>
+
+    <!-- Image -->
+    <img
+      v-if="form.image"
+      :src="form.image"
+      class="w-full h-full object-cover absolute inset-0"
+    >
+
+    <!-- Placeholder -->
+    <div v-else class="w-full h-full bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+
+  <!-- Button -->
+  <label
+    for="productImageAdd"
+    class="mt-2 inline-block px-3 py-2 bg-gray-200 dark:bg-gray-700
+           rounded-lg text-sm cursor-pointer hover:bg-gray-300
+           dark:hover:bg-gray-600"
+  >
+    Choose Image
+  </label>
+
+  <input id="productImageAdd"
+         type="file"
+         class="hidden"
+         accept="image/*"
+         @change="handleImageUpload">
+</div>
+
+
 
       </div>
       
@@ -271,6 +327,53 @@
       ></textarea>
     </div>
 
+<!-- Product Image -->
+<div>
+  <label class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+    Product Image
+  </label>
+
+  <!-- Image Preview Box -->
+  <div class="relative w-28 h-28 rounded-lg border dark:border-gray-700 overflow-hidden">
+
+    <!-- Loading Text -->
+    <div
+      v-if="isConvertingImage"
+      class="absolute inset-0 flex items-center justify-center
+             bg-black bg-opacity-40 z-30 text-white text-xs font-medium"
+    >
+      Loading...
+    </div>
+
+    <!-- Image -->
+    <img
+      v-if="form.image"
+      :src="form.image"
+      class="w-full h-full object-cover absolute inset-0"
+    >
+
+    <!-- Placeholder -->
+    <div v-else class="w-full h-full bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+
+  <!-- Button -->
+  <label for="productImageEdit"
+         class="mt-2 inline-block px-3 py-2 bg-gray-200 dark:bg-gray-700
+                rounded-lg text-sm cursor-pointer hover:bg-gray-300
+                dark:hover:bg-gray-600"
+  >
+    Choose Image
+  </label>
+
+  <input id="productImageEdit"
+         type="file"
+         class="hidden"
+         accept="image/*"
+         @change="handleImageUpload">
+</div>
+
+
+
   </div>
    <template #footer>
     <button
@@ -293,6 +396,8 @@
 
 <script>
 import FBModal from "@/components/FBModal.vue"
+import heic2any from "heic2any"
+
 import {
   getAllProducts,
   addProduct,
@@ -331,6 +436,8 @@ export default {
       showDeleteModal: false,
 
       selectedProduct: null,
+
+      isConvertingImage: false,
 
       form: {
         name: "",
@@ -372,6 +479,8 @@ methods: {
     this.errors = {}
 
     this.showAddModal = true
+    this.isConvertingImage = false
+
   },
 
 
@@ -379,16 +488,18 @@ methods: {
      EDIT PRODUCT (open modal)
   ---------------------------*/
   openEdit(product) {
-    this.selectedProduct = product
+      this.selectedProduct = product
 
-    // Populate form
-    this.form = {
-      name: product.name,
-      price: product.price,
-      description: product.description
-    }
+      this.form = {
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        image: product.image ?? ""
+      }
 
-    this.showEditModal = true
+      this.showEditModal = true
+      this.isConvertingImage = false
+
   },
 
   async updateProductConfirm() {
@@ -408,6 +519,8 @@ methods: {
 
     this.products = await getAllProducts()
     this.closeModal()
+
+    
   },
 
   /* ---------------------------
@@ -448,7 +561,80 @@ methods: {
     this.form = { name: "", price: "", description: "" }
     this.errors = {}
     this.showAddModal = false
+  },
+
+  async resizeToSquare300(file) {
+    return new Promise(resolve => {
+      const img = new Image()
+      img.onload = () => {
+        const size = 300     // final width and height
+        const canvas = document.createElement("canvas")
+        canvas.width = size
+        canvas.height = size
+        const ctx = canvas.getContext("2d")
+
+        const minSide = Math.min(img.width, img.height)
+        const sx = (img.width - minSide) / 2
+        const sy = (img.height - minSide) / 2
+
+        ctx.drawImage(
+          img,
+          sx, sy, minSide, minSide,
+          0, 0, size, size
+        )
+
+        resolve(canvas.toDataURL("image/jpeg", 0.85))
+      }
+
+      const reader = new FileReader()
+      reader.onload = e => {
+        img.src = e.target.result
+      }
+      reader.readAsDataURL(file)
+    })
+  },
+  async handleImageUpload(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    this.isConvertingImage = true   // start spinner
+
+    let processedFile = file
+
+    const isHeic =
+      file.type === "image/heic" ||
+      file.type === "image/heif" ||
+      file.name.toLowerCase().endsWith(".heic")
+
+    if (isHeic) {
+      try {
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: "image/jpeg",
+          quality: 0.9
+        })
+
+        processedFile = new File([convertedBlob], file.name.replace(".heic", ".jpg"), {
+          type: "image/jpeg"
+        })
+      } catch (error) {
+        console.error("HEIC conversion failed", error)
+        alert("Unable to process HEIC image.")
+        this.isConvertingImage = false
+        return
+      }
+    }
+
+    // resize final output
+    this.form.image = await this.resizeToSquare300(processedFile)
+
+    this.isConvertingImage = false   // spinner done
   }
+
+
+
+
+  
 }
 
 }

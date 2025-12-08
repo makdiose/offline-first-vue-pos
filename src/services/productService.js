@@ -2,10 +2,11 @@
 
 import { db } from "@/db/db"
 
-// Fetch all products
+// Fetch all products sorted newest first
 export async function getAllProducts() {
-  return await db.products.toArray()
+  return await db.products.orderBy("id").reverse().toArray()
 }
+
 
 // Add a product
 export async function addProduct(product) {
