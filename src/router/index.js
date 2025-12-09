@@ -37,6 +37,11 @@ const router = createRouter({
       component: () => import("@/views/RegisterView.vue"),
       meta: { layout: "Blank", guestOnly: true, title: "Create Account" }
     },
+    {
+      path: "/flowbite-demo",
+      name: "FlowbiteDemo",
+      component: () => import("@/views/FlowbiteDemoView.vue")
+    },
 
     // NOT FOUND
     {

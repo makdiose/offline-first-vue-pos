@@ -18,7 +18,6 @@
 
 /* Components using Tailwind tokens */
 @layer components {
-
   .card {
     @apply bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md transition-all;
   }
@@ -46,5 +45,4 @@
   .header-shadow {
     @apply shadow-sm;
   }
-
 }

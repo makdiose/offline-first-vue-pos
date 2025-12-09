@@ -8,8 +8,23 @@ const user = ref({ name: 'Alexander', initial: 'A' })
 
 // Navigation links
 const navItems = [
-  { name: 'Dashboard', icon: 'M4 4h16v16H4V4zm2 2v2h4V6H6zm6 0v2h4V6h-4zm-6 4v2h4v-2H6zm6 0v2h4v-2h-4zm-6 4v2h4v-2H6zm6 0v2h4v-2h-4z', path: '/' },
-  { name: 'Products', icon: 'M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z', path: '/products' },
+  { 
+    name: 'Dashboard', 
+    icon: 'M4 4h16v16H4V4zm2 2v2h4V6H6zm6 0v2h4V6h-4zm-6 4v2h4v-2H6zm6 0v2h4v-2h-4zm-6 4v2h4v-2H6zm6 0v2h4v-2h-4z', 
+    path: '/' 
+  },
+
+  { 
+    name: 'Products', 
+    icon: 'M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z', 
+    path: '/products' 
+  },
+
+  {
+    name: 'Flowbite Demo',
+    icon: 'M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2zm6 12l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3zM4 14l.8 2.2L7 17l-2.2.8L4 20l-.8-2.2L1 17l2.2-.8z',
+    path: '/flowbite-demo'
+  },
 ]
 
 

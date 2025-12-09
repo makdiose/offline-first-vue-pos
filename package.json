@@ -17,6 +17,7 @@
     "dexie": "^4.2.1",
     "firebase": "^12.6.0",
     "flowbite": "^4.0.1",
+    "flowbite-vue": "^0.2.2",
     "heic2any": "^0.0.4",
     "pinia": "^3.0.4",
     "tailwindcss-animate": "^1.0.7",

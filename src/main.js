@@ -4,7 +4,8 @@ import { createApp } from "vue"
 import App from "./App.vue"
 import router from "./router"
 import "./assets/main.css"
-import "flowbite"
+import "flowbite";
+import * as FlowbiteVue from "flowbite-vue";
 
 import { createPinia } from "pinia"
 import { useThemeStore } from "@/stores/theme"
@@ -27,6 +28,7 @@ async function bootstrap() {
 
       app.use(pinia)
       app.use(router)
+
 
       // Now that Pinia is active, load saved theme
       const theme = useThemeStore()

@@ -24,7 +24,6 @@
       </button>
     </div>
 
-
     <!-- Table Section -->
     <div class="card shadow-md">
       <div class="overflow-x-auto rounded-lg">
@@ -113,6 +112,17 @@
           </tbody>
 
         </table>
+
+        <div class="text-center py-6" v-if="limit < products.length">
+  <button
+    @click="limit += 10"
+    class="px-5 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300
+           dark:hover:bg-gray-600 rounded-lg text-sm"
+  >
+    Load More
+  </button>
+</div>
+
       </div>
     </div>
 
@@ -407,11 +417,26 @@
   </template>
 </FBModal>
 
+
 </template>
 
 <script>
 import FBModal from "@/components/FBModal.vue"
 import heic2any from "heic2any"
+
+import * as FlowbiteVue from "flowbite-vue";
+import { FwbButton } from "flowbite-vue"
+import { 
+  FwbAccordion, 
+  FwbAccordionPanel, 
+  FwbAccordionHeader, 
+  FwbAccordionContent 
+} from "flowbite-vue";
+
+
+console.log("FlowbiteVue = ", FlowbiteVue);
+
+
 
 import {
   getAllProducts,
@@ -440,11 +465,20 @@ function slugify(text) {
 
 export default {
   name: "ProductsView",
-  components: { FBModal },
+  components: { 
+    FBModal,
+    FwbButton,
+    FwbAccordion,
+    FwbAccordionPanel,
+    FwbAccordionHeader,
+    FwbAccordionContent
+   },
 
   data() {
     return {
+      open1: false,
       products: [],
+         limit: 2,
       showAddModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -453,7 +487,6 @@ export default {
 
       isConvertingImage: false,
       search: "",
-
 
       form: {
         name: "",
@@ -655,17 +688,28 @@ methods: {
 computed: {
   filteredProducts() {
     const term = this.search.toLowerCase().trim()
-    if (!term) return this.products
+    let list = this.products
 
-    return this.products.filter(p => {
-      return (
-        p.name?.toLowerCase().includes(term) ||
-        p.description?.toLowerCase().includes(term) ||
-        String(p.price).includes(term)
-      )
-    })
+    if (term) {
+      list = list.filter(p => {
+        return (
+          p.name?.toLowerCase().includes(term) ||
+          p.description?.toLowerCase().includes(term) ||
+          String(p.price).includes(term)
+        )
+      })
+    }
+
+    return list.slice(0, this.limit)
   }
+
 },
+watch: {
+  search() {
+    this.limit = 10
+  }
+}
+
 
 
 }
